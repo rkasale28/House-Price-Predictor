@@ -5,12 +5,24 @@
     <title>Result</title>
   </head>
   <body>
-    <b>City : </b>{{city}} <br />
-    <b>Area : </b>{{area}} <br />
-    <b>Bedrooms : </b>{{bedrooms}} <br />
+    <b>City : </b>{{city}} <br /><br />
+    <b>Area : </b>{{area}} <br /><br />
+    <b>Bedrooms : </b>{{bedrooms}} <br /><br />
 
+    <table cellpadding = 6 cellspacing = 6 >
     {% for key,value in dict.items %}
+    {% if forloop.counter|add:"-1"|divisibleby:"6" %}
+    <tr>
+      {% endif %}
+
+      <td>
     <b>{{key}} : </b>{{value}} <br />
+  </td>
+
+  {% if forloop.counter|divisibleby:"6" %}
+</tr>
+{% endif %}
     {% endfor %}
+  </table>
   </body>
 </html>
