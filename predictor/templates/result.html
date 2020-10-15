@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Result</title>
+  </head>
+  <body>
+    <b>City : </b>{{city}} <br />
+    <b>Area : </b>{{area}} <br />
+    <b>Bedrooms : </b>{{bedrooms}} <br />
+
+    {% for key,value in dict.items %}
+    <b>{{key}} : </b>{{value}} <br />
+    {% endfor %}
+  </body>
+</html>
