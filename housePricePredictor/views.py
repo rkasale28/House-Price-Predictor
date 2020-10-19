@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import pandas as pd
 import os
+import json
 
 data = {}
 amenities = ['Resale',  'MaintenanceStaff', 'Gymnasium', 'SwimmingPool', 'LandscapedGardens',
@@ -13,11 +14,56 @@ amenities = ['Resale',  'MaintenanceStaff', 'Gymnasium', 'SwimmingPool', 'Landsc
 'BED', 'VaastuCompliant', 'Microwave', 'GolfCourse', 'TV',
 'DiningTable', 'Sofa', 'Wardrobe', 'Refrigerator']
 
+# create api
+# will accept iteration
+# will return json { "currPrice": XX },
 
 # Create your views here.
 def index(request):
-    data['cities'] = ['Bangalore', 'Chennai', 'Delhi', 'Hyderabad', 'Kolkata', 'Mumbai']
-    return render(request,'index.html',data)
+    cites = [
+        { 
+            "value" : "Mumbai", 
+            "text" : "Mumbai" 
+        },
+        { 
+            "value" : "Delhi", 
+            "text" : "Delhi", 
+        },
+        { 
+            "value" : "Chennai", 
+            "text" : "Chennai", 
+        },
+        { 
+            "value" : "Hyderabad", 
+            "text" : "Hyderabad", 
+        },
+        { 
+            "value" : "Kolkata", 
+            "text" : "Kolkata", 
+        },
+        { 
+            "value" : "Bangalore", 
+            "text" : "Bangalore", 
+        },
+
+
+    ]
+    data['cities'] = json.dumps(cites)
+    return render(request,'chatbot.html',data)
+
+def handle_iteration(request):
+    if request.method == 'POST':
+        request_data = json.loads(request.POST['data'])
+        print(request_data)
+        iteration = json.loads(request.POST['iterNo'])
+        print('iteration : ',iteration)
+        # if(iteration == 1):
+
+        response = {
+            "currPrice" : "XXX",
+        }
+        return JsonResponse(response)
+
 
 def intermediate(request):
     data['amenities'] = amenities

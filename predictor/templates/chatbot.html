@@ -118,25 +118,25 @@
 
             // Start Bot
             // First Messages
-            load_messages: botui.message.bot({
+            botui.message.bot({
                 content: 'Hi there! 👋',
                 loading: true,
                 delay: 3000,
             }).then(function () {
                 return botui.message.bot({
                     loading: true,
-                    delay: 1500,
+                    delay: 500,
                     content: "I'm Xavi, your online real estate assitant.",
                 });
             }).then(function () {
                 return botui.message.bot({
                     loading: true,
-                    delay: 1500,
+                    delay: 500,
                     content: "Would you like to know real estate price estimations?",
                 });
             }).then(function () {
                 return botui.action.button({
-                    delay: 1500,
+                    delay: 500,
                     loading: true,
                     addMessage: true,
                     action: [{
@@ -151,27 +151,16 @@
                 if (res.value == 'yes') {
                     return botui.message.bot({
                             loading: true,
-                            delay: 1500,
+                            delay: 500,
                             content: "Select the city you would like",
                         })
                         .then(function () {
                             return botui.action.select({
                                 action: {
                                     placeholder: "Select City",
-                                    value: 'MU', // Selected value or Selected Array object. Example: [{value: "TR", text : "Türkçe" },{value: "EN", text : "English" }]
-                                    options: [{
-                                            value: "MU",
-                                            text: "Mumbai"
-                                        },
-                                        {
-                                            value: "DE",
-                                            text: "Delhi"
-                                        },
-                                        {
-                                            value: "CH",
-                                            text: "Chennai"
-                                        }
-                                    ],
+                                    // Selected value or Selected Array object. Example: [{value: "TR", text : "Türkçe" },{value: "EN", text : "English" }]
+                                    options: {{ cities | safe }}
+                                    ,
                                     button: {
                                         icon: 'check',
                                         label: 'OK'
@@ -184,7 +173,7 @@
                             console.log(allData)
                             return botui.message.bot({
                                 loading: true,
-                                delay: 1500,
+                                delay: 500,
                                 content: "Enter the area in sq.ft",
                             });
                         })
@@ -203,7 +192,7 @@
                             allData.area = res.value
                             return botui.message.bot({
                                 loading: true,
-                                delay: 1500,
+                                delay: 500,
                                 content: "Enter the location",
                             })
                         })
@@ -222,7 +211,7 @@
                             allData.location = res.value
                             return botui.message.bot({
                                 loading: true,
-                                delay: 1500,
+                                delay: 500,
                                 content: "Enter the bedroom count",
                             })
                         })
@@ -241,12 +230,12 @@
                             allData.bedroomCount = res.value
                             return botui.message.bot({
                                 loading: true,
-                                delay: 1500,
+                                delay: 500,
                                 content: "Resale",
                             });
                         }).then(function () {
                             return botui.action.button({
-                                delay: 1500,
+                                delay: 500,
                                 loading: true,
                                 addMessage: true,
                                 action: [{
@@ -261,11 +250,11 @@
                         .then((res) => {
                             allData.resale = res.value
                             // 1st ajax call here
-                            /*
+                            
                                 $.post({
-                                    url: "",
+                                    url: "{% url 'handle_iteration' %}",
                                     async: false,
-                                    data: { allData, iterNo: 1 },
+                                    data: { data : JSON.stringify(allData) , iterNo: 1, csrfmiddlewaretoken: '{{ csrf_token }}' },
                                     dataType: "json",
                                     success: function(response) {
                                         currentPrice = response.currPrice
@@ -275,40 +264,42 @@
                                             content: "Based on current data price is " + currentPrice,
                                         })
                                     },
+                                    headers: {  },
                                     error: function(xhr, status, error) {
                                         console.log(error)
                                     }
                                 })
 
-                                botui.message.bot({
+                                return botui.message.bot({
                                     loading: true,
                                     delay: 1000,
                                     content: "Want a more detailed estimate?",
-                                })
-                                botui.action.button({
-                                    delay: 1500,
-                                    loading: true,
-                                    addMessage: true,
-                                    action: [{
-                                        text: 'Yes!',
-                                        value: true
-                                    }, {
-                                        text: 'No.',
-                                        value: false
-                                    }]
-                                }).then((resInner) => {
-                                    if(!resInner) {
-                                        codeEnded = true;
-                                        break load_messages;
-                                    }
-                                })
-                            */
+                                }).then(function(){
+                                    botui.action.button({
+                                        delay: 500,
+                                        loading: true,
+                                        addMessage: true,
+                                        action: [{
+                                            text: 'Yes!',
+                                            value: true
+                                        }, {
+                                            text: 'No.',
+                                            value: false
+                                        }]
+                                    }).then((resInner) => {
+                                        if(!resInner) {
+                                            codeEnded = true;
+                                            // break load_messages;
+                                        }
+                                    })
 
-                            return botui.message.bot({
-                                loading: true,
-                                delay: 1500,
-                                content: "Select all the building amenities you want",
-                            });
+                                }).then(function(){
+                                    botui.message.bot({
+                                        loading: true,
+                                        delay: 500,
+                                        content: "Select all the building amenities you want",
+                                    });
+                                })
                         })
                         .then(() => {
                             return botui.action.select({
@@ -373,7 +364,7 @@
                                     content: "Want a more detailed estimate?",
                                 })
                                 botui.action.button({
-                                    delay: 1500,
+                                    delay: 500,
                                     loading: true,
                                     addMessage: true,
                                     action: [{
@@ -393,7 +384,7 @@
 
                             return botui.message.bot({
                                 loading: true,
-                                delay: 1500,
+                                delay: 500,
                                 content: "Select the Additional building amenities you want",
                             });
                         })
@@ -465,7 +456,7 @@
                                     content: "Want a more detailed estimate?",
                                 })
                                 botui.action.button({
-                                    delay: 1500,
+                                    delay: 500,
                                     loading: true,
                                     addMessage: true,
                                     action: [{
@@ -485,7 +476,7 @@
 
                             return botui.message.bot({
                                 loading: true,
-                                delay: 1500,
+                                delay: 500,
                                 content: "Select the Additional building amenities you want",
                             });
                         })
@@ -548,7 +539,7 @@
                                     content: "Want a more detailed estimate?",
                                 })
                                 botui.action.button({
-                                    delay: 1500,
+                                    delay: 500,
                                     loading: true,
                                     addMessage: true,
                                     action: [{
@@ -568,7 +559,7 @@
 
                             return botui.message.bot({
                                 loading: true,
-                                delay: 1500,
+                                delay: 500,
                                 content: "Select the Additional building amenities you want",
                             });
                         })
@@ -631,7 +622,7 @@
                                     content: "Want a more detailed estimate?",
                                 })
                                 botui.action.button({
-                                    delay: 1500,
+                                    delay: 500,
                                     loading: true,
                                     addMessage: true,
                                     action: [{
@@ -651,7 +642,7 @@
 
                             return botui.message.bot({
                                 loading: true,
-                                delay: 1500,
+                                delay: 500,
                                 content: "Select the Additional building amenities you want",
                             });
                         })
@@ -695,22 +686,22 @@
                 } else {
                     return botui.message.bot({
                         loading: true,
-                        delay: 1500,
+                        delay: 500,
                         content: "Bye, Thank you for coming!",
                     });
                 }
             }).then(function () {
                 return botui.message.bot({
                     loading: true,
-                    delay: 1500,
+                    delay: 500,
                     content: "Bye, Thank you for coming!",
                 });
             })
 
-            if (codeEnded) {
+            load_messages: if (codeEnded) {
                 botui.message.bot({
                     loading: true,
-                    delay: 1500,
+                    delay: 500,
                     content: "Bye, Thank you for coming!",
                 });
             }
