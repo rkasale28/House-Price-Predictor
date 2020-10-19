@@ -71,642 +71,727 @@
 
     <!-- <script src="./main.js"></script> -->
     <script>
-        $(document).ready(function () {
-            var botui = new BotUI('my-botui-app');
-            var currentPrice = 0;
-            var codeEnded = false;
-            var allData = {
-                city: '',
-                area: 0,
-                location: '',
-                bedroomCount: 0,
-                resale: false,
-                amenities1: {
-                    intercom: false,
-                    security: false,
-                    powerBackup: false,
-                    carParcking: false,
-                    lift: false
-                },
-                amenities2: {
-                    maintainanceStaff: false,
-                    gynasium: false,
-                    swimmingPool: false,
-                    landscape: false,
-                    jogging: false,
-                    rainwater: false
-                },
-                amenities3: {
-                    sportsFacility: false,
-                    clubHouse: false,
-                    indoorGames: false,
-                    childrenPlay: false
-                },
-                amenities4: {
-                    bed: false,
-                    dinningTable: false,
-                    wardrobe: false,
-                    refrigerator: false
-                },
-                amenities5: {
-                    ac: false,
-                    wifi: false,
-                    tv: false,
-                    microwave: false
-                }
+        $(document).ready(function() {
+          var botui = new BotUI('my-botui-app');
+          var currentPrice = 0;
+          var codeEnded = false;
+          var allData = {
+            city: '',
+            area: 0,
+            location: '',
+            bedroomCount: 0,
+            resale: false,
+            amenities1: {
+              intercom: false,
+              security: false,
+              powerBackup: false,
+              carParcking: false,
+              lift: false
+            },
+            amenities2: {
+              maintainanceStaff: false,
+              gynasium: false,
+              swimmingPool: false,
+              landscape: false,
+              jogging: false,
+              rainwater: false
+            },
+            amenities3: {
+              sportsFacility: false,
+              clubHouse: false,
+              indoorGames: false,
+              childrenPlay: false
+            },
+            amenities4: {
+              bed: false,
+              dinningTable: false,
+              wardrobe: false,
+              refrigerator: false
+            },
+            amenities5: {
+              ac: false,
+              wifi: false,
+              tv: false,
+              microwave: false
             }
+          }
 
-            // Start Bot
-            // First Messages
-            botui.message.bot({
-                content: 'Hi there! 👋',
-                loading: true,
-                delay: 3000,
-            }).then(function () {
-                return botui.message.bot({
+          // Start Bot
+          // First Messages
+          botui.message.bot({
+            content: 'Hi there! 👋',
+            loading: true,
+            delay: 3000,
+          }).then(function() {
+            return botui.message.bot({
+              loading: true,
+              delay: 500,
+              content: "I'm Xavi, your online real estate assitant.",
+            });
+          }).then(function() {
+            return botui.message.bot({
+              loading: true,
+              delay: 500,
+              content: "Would you like to know real estate price estimations?",
+            });
+          }).then(function() {
+            return botui.action.button({
+              delay: 500,
+              loading: true,
+              addMessage: true,
+              action: [{
+                text: 'Yes!',
+                value: 'yes'
+              }, {
+                text: 'No.',
+                value: 'no'
+              }]
+            })
+          }).then(function(res) {
+            if (res.value == 'yes') {
+              return botui.message.bot({
+                  loading: true,
+                  delay: 500,
+                  content: "Select the city you would like",
+                })
+                .then(function() {
+                  return botui.action.select({
+                    action: {
+                      placeholder: "Select City",
+                      options: {{ cities | safe }},
+                      button: {
+                        icon: 'check',
+                        label: 'OK'
+                      }
+                    }
+                  });
+                })
+                .then((res) => {
+                  allData.city = res.value;
+                  console.log(allData)
+                  return botui.message.bot({
                     loading: true,
                     delay: 500,
-                    content: "I'm Xavi, your online real estate assitant.",
-                });
-            }).then(function () {
-                return botui.message.bot({
+                    content: "Enter the area in sq.ft",
+                  });
+                })
+                .then(() => {
+                  return botui.action.text({
+                    delay: 400,
+                    action: {
+                      size: 18,
+                      icon: 'user-circle-o',
+                      sub_type: 'number',
+                      placeholder: 'Area'
+                    }
+                  })
+                })
+                .then((res) => {
+                  allData.area = res.value
+                  return botui.message.bot({
                     loading: true,
                     delay: 500,
-                    content: "Would you like to know real estate price estimations?",
-                });
-            }).then(function () {
-                return botui.action.button({
+                    content: "Enter the location",
+                  })
+                })
+                .then(() => {
+                  return botui.action.text({
+                    delay: 400,
+                    action: {
+                      size: 18,
+                      icon: 'user-circle-o',
+                      sub_type: 'text',
+                      placeholder: 'Location'
+                    }
+                  })
+                })
+                .then((res) => {
+                  allData.location = res.value
+                  return botui.message.bot({
+                    loading: true,
+                    delay: 500,
+                    content: "Enter the bedroom count",
+                  })
+                })
+                .then(() => {
+                  return botui.action.text({
+                    delay: 400,
+                    action: {
+                      size: 18,
+                      icon: 'user-circle-o',
+                      sub_type: 'number',
+                      placeholder: 'Bedroom Count'
+                    }
+                  })
+                })
+                .then((res) => {
+                  allData.bedroomCount = res.value
+                  return botui.message.bot({
+                    loading: true,
+                    delay: 500,
+                    content: "Resale",
+                  });
+                })
+                .then(() => {
+                  return botui.action.button({
                     delay: 500,
                     loading: true,
                     addMessage: true,
                     action: [{
-                        text: 'Yes!',
-                        value: 'yes'
+                      text: 'Yes!',
+                      value: true
                     }, {
-                        text: 'No.',
-                        value: 'no'
+                      text: 'No.',
+                      value: false
                     }]
+                  })
                 })
-            }).then(function (res) {
-                if (res.value == 'yes') {
-                    return botui.message.bot({
-                            loading: true,
-                            delay: 500,
-                            content: "Select the city you would like",
-                        })
-                        .then(function () {
-                            return botui.action.select({
-                                action: {
-                                    placeholder: "Select City",
-                                    // Selected value or Selected Array object. Example: [{value: "TR", text : "Türkçe" },{value: "EN", text : "English" }]
-                                    options: {{ cities | safe }}
-                                    ,
-                                    button: {
-                                        icon: 'check',
-                                        label: 'OK'
-                                    }
-                                }
-                            })
-                        })
-                        .then(function (res) {
-                            allData.city = res.value;
-                            console.log(allData)
-                            return botui.message.bot({
-                                loading: true,
-                                delay: 500,
-                                content: "Enter the area in sq.ft",
-                            });
-                        })
-                        .then(() => {
-                            return botui.action.text({
-                                delay: 400,
-                                action: {
-                                    size: 18,
-                                    icon: 'user-circle-o',
-                                    sub_type: 'number',
-                                    placeholder: 'Area'
-                                }
-                            })
-                        })
-                        .then((res) => {
-                            allData.area = res.value
-                            return botui.message.bot({
-                                loading: true,
-                                delay: 500,
-                                content: "Enter the location",
-                            })
-                        })
-                        .then(() => {
-                            return botui.action.text({
-                                delay: 400,
-                                action: {
-                                    size: 18,
-                                    icon: 'user-circle-o',
-                                    sub_type: 'text',
-                                    placeholder: 'Location'
-                                }
-                            })
-                        })
-                        .then((res) => {
-                            allData.location = res.value
-                            return botui.message.bot({
-                                loading: true,
-                                delay: 500,
-                                content: "Enter the bedroom count",
-                            })
-                        })
-                        .then(() => {
-                            return botui.action.text({
-                                delay: 400,
-                                action: {
-                                    size: 18,
-                                    icon: 'user-circle-o',
-                                    sub_type: 'number',
-                                    placeholder: 'Bedroom Count'
-                                }
-                            })
-                        })
-                        .then((res) => {
-                            allData.bedroomCount = res.value
-                            return botui.message.bot({
-                                loading: true,
-                                delay: 500,
-                                content: "Resale",
-                            });
-                        }).then(function () {
-                            return botui.action.button({
-                                delay: 500,
-                                loading: true,
-                                addMessage: true,
-                                action: [{
-                                    text: 'Yes!',
-                                    value: true
-                                }, {
-                                    text: 'No.',
-                                    value: false
-                                }]
-                            })
-                        })
-                        .then((res) => {
-                            allData.resale = res.value
-                            // 1st ajax call here
-                            
-                                $.post({
-                                    url: "{% url 'handle_iteration' %}",
-                                    async: false,
-                                    data: { data : JSON.stringify(allData) , iterNo: 1, csrfmiddlewaretoken: '{{ csrf_token }}' },
-                                    dataType: "json",
-                                    success: function(response) {
-                                        currentPrice = response.currPrice
-                                        botui.message.bot({
-                                            loading: true,
-                                            delay: 500,
-                                            content: "Based on current data price is " + currentPrice,
-                                        })
-                                    },
-                                    headers: {  },
-                                    error: function(xhr, status, error) {
-                                        console.log(error)
-                                    }
-                                })
+                .then((res) => {
+                  allData.resale = res.value
+                  // 1st ajax call here
 
-                                return botui.message.bot({
-                                    loading: true,
-                                    delay: 1000,
-                                    content: "Want a more detailed estimate?",
-                                }).then(function(){
-                                    botui.action.button({
-                                        delay: 500,
-                                        loading: true,
-                                        addMessage: true,
-                                        action: [{
-                                            text: 'Yes!',
-                                            value: true
-                                        }, {
-                                            text: 'No.',
-                                            value: false
-                                        }]
-                                    }).then((resInner) => {
-                                        if(!resInner) {
-                                            codeEnded = true;
-                                            // break load_messages;
-                                        }
-                                    })
-
-                                }).then(function(){
-                                    botui.message.bot({
-                                        loading: true,
-                                        delay: 500,
-                                        content: "Select all the building amenities you want",
-                                    });
-                                })
-                        })
-                        .then(() => {
-                            return botui.action.select({
-                                action: {
-                                    placeholder: "Amenities List",
-                                    multipleselect: true, // Default: false
-                                    options: [{
-                                            value: "intercom",
-                                            text: "Intercom"
-                                        },
-                                        {
-                                            value: "security",
-                                            text: "Security"
-                                        },
-                                        {
-                                            value: "powerBackup",
-                                            text: "Power Backup"
-                                        },
-                                        {
-                                            value: "carParcking",
-                                            text: "Car Parking"
-                                        },
-                                        {
-                                            value: "lift",
-                                            text: "Lift"
-                                        }
-                                    ],
-                                    button: {
-                                        icon: 'check',
-                                        label: 'OK'
-                                    }
-                                }
-                            })
-                        })
-                        .then((res) => {
-                            var selected = res.value.split(",");
-                            for (let i = 0; i < selected.length; i++) {
-                                allData.amenities1[selected[i].trim()] = true
-                            }
-                            /*
-                                $.post({
-                                    url: "",
-                                    async: false,
-                                    data: { allData, iterNo: 2 },
-                                    dataType: "json",
-                                    success: function(response) {
-                                        currentPrice = response.currPrice
-                                        botui.message.bot({
-                                            loading: true,
-                                            delay: 500,
-                                            content: "Based on current data price is " + currentPrice,
-                                        })
-                                    },
-                                    error: function(xhr, status, error) {
-                                        console.log(error)
-                                    }
-                                })
-
-                                botui.message.bot({
-                                    loading: true,
-                                    delay: 1000,
-                                    content: "Want a more detailed estimate?",
-                                })
-                                botui.action.button({
-                                    delay: 500,
-                                    loading: true,
-                                    addMessage: true,
-                                    action: [{
-                                        text: 'Yes!',
-                                        value: true
-                                    }, {
-                                        text: 'No.',
-                                        value: false
-                                    }]
-                                }).then((resInner) => {
-                                    if(!resInner) {
-                                        codeEnded = true;
-                                        break load_messages;
-                                    }
-                                })
-                            */
-
-                            return botui.message.bot({
-                                loading: true,
-                                delay: 500,
-                                content: "Select the Additional building amenities you want",
-                            });
-                        })
-                        .then(() => {
-                            return botui.action.select({
-                                action: {
-                                    placeholder: "Amenities List",
-                                    multipleselect: true, // Default: false
-                                    options: [{
-                                            value: "maintainanceStaff",
-                                            text: "Maintenance Staff"
-                                        },
-                                        {
-                                            value: "gynasium",
-                                            text: "Gymnasium"
-                                        },
-                                        {
-                                            value: "swimmingPool",
-                                            text: "Swimming Pool"
-                                        },
-                                        {
-                                            value: "landscape",
-                                            text: "Landscape"
-                                        },
-                                        {
-                                            value: "rainwater",
-                                            text: "Rain Water"
-                                        },
-                                        {
-                                            value: "jogging",
-                                            text: "Jogging"
-                                        }
-                                    ],
-                                    button: {
-                                        icon: 'check',
-                                        label: 'OK'
-                                    }
-                                }
-                            })
-                        })
-                        .then((res) => {
-                            var selected = res.value.split(",");
-                            for (let i = 0; i < selected.length; i++) {
-                                allData.amenities2[selected[i].trim()] = true
-                            }
-
-                            /*
-                                $.post({
-                                    url: "",
-                                    async: false,
-                                    data: { allData, iterNo: 3 },
-                                    dataType: "json",
-                                    success: function(response) {
-                                        currentPrice = response.currPrice
-                                        botui.message.bot({
-                                            loading: true,
-                                            delay: 500,
-                                            content: "Based on current data price is " + currentPrice,
-                                        })
-                                    },
-                                    error: function(xhr, status, error) {
-                                        console.log(error)
-                                    }
-                                })
-
-                                botui.message.bot({
-                                    loading: true,
-                                    delay: 1000,
-                                    content: "Want a more detailed estimate?",
-                                })
-                                botui.action.button({
-                                    delay: 500,
-                                    loading: true,
-                                    addMessage: true,
-                                    action: [{
-                                        text: 'Yes!',
-                                        value: true
-                                    }, {
-                                        text: 'No.',
-                                        value: false
-                                    }]
-                                }).then((resInner) => {
-                                    if(!resInner) {
-                                        codeEnded = true;
-                                        break load_messages;
-                                    }
-                                })
-                            */
-
-                            return botui.message.bot({
-                                loading: true,
-                                delay: 500,
-                                content: "Select the Additional building amenities you want",
-                            });
-                        })
-                        .then(() => {
-                            return botui.action.select({
-                                action: {
-                                    placeholder: "Amenities List",
-                                    multipleselect: true, // Default: false
-                                    options: [{
-                                            value: "sportsFacility",
-                                            text: "Sports Facility"
-                                        },
-                                        {
-                                            value: "clubHouse",
-                                            text: "Clubhouse"
-                                        },
-                                        {
-                                            value: "indoorGames",
-                                            text: "Indoor Games"
-                                        },
-                                        {
-                                            value: "childrenPlay",
-                                            text: "Children play"
-                                        }
-                                    ],
-                                    button: {
-                                        icon: 'check',
-                                        label: 'OK'
-                                    }
-                                }
-                            })
-                        })
-                        .then((res) => {
-                            var selected = res.value.split(",");
-                            for (let i = 0; i < selected.length; i++) {
-                                allData.amenities3[selected[i].trim()] = true
-                            }
-                            /*
-                                $.post({
-                                    url: "",
-                                    async: false,
-                                    data: { allData, iterNo: 4 },
-                                    dataType: "json",
-                                    success: function(response) {
-                                        currentPrice = response.currPrice
-                                        botui.message.bot({
-                                            loading: true,
-                                            delay: 500,
-                                            content: "Based on current data price is " + currentPrice,
-                                        })
-                                    },
-                                    error: function(xhr, status, error) {
-                                        console.log(error)
-                                    }
-                                })
-
-                                botui.message.bot({
-                                    loading: true,
-                                    delay: 1000,
-                                    content: "Want a more detailed estimate?",
-                                })
-                                botui.action.button({
-                                    delay: 500,
-                                    loading: true,
-                                    addMessage: true,
-                                    action: [{
-                                        text: 'Yes!',
-                                        value: true
-                                    }, {
-                                        text: 'No.',
-                                        value: false
-                                    }]
-                                }).then((resInner) => {
-                                    if(!resInner) {
-                                        codeEnded = true;
-                                        break load_messages;
-                                    }
-                                })
-                            */
-
-                            return botui.message.bot({
-                                loading: true,
-                                delay: 500,
-                                content: "Select the Additional building amenities you want",
-                            });
-                        })
-                        .then(() => {
-                            return botui.action.select({
-                                action: {
-                                    placeholder: "Amenities List",
-                                    multipleselect: true, // Default: false
-                                    options: [{
-                                            value: "bed",
-                                            text: "Bed"
-                                        },
-                                        {
-                                            value: "dinningTable",
-                                            text: "Dining Table"
-                                        },
-                                        {
-                                            value: "wardrobe",
-                                            text: "Wardrobe"
-                                        },
-                                        {
-                                            value: "refrigerator",
-                                            text: "Referigator"
-                                        }
-                                    ],
-                                    button: {
-                                        icon: 'check',
-                                        label: 'OK'
-                                    }
-                                }
-                            })
-                        })
-                        .then((res) => {
-                            var selected = res.value.split(",");
-                            for (let i = 0; i < selected.length; i++) {
-                                allData.amenities4[selected[i].trim()] = true
-                            }
-                            /*
-                                $.post({
-                                    url: "",
-                                    async: false,
-                                    data: { allData, iterNo: 5 },
-                                    dataType: "json",
-                                    success: function(response) {
-                                        currentPrice = response.currPrice
-                                        botui.message.bot({
-                                            loading: true,
-                                            delay: 500,
-                                            content: "Based on current data price is " + currentPrice,
-                                        })
-                                    },
-                                    error: function(xhr, status, error) {
-                                        console.log(error)
-                                    }
-                                })
-
-                                botui.message.bot({
-                                    loading: true,
-                                    delay: 1000,
-                                    content: "Want a more detailed estimate?",
-                                })
-                                botui.action.button({
-                                    delay: 500,
-                                    loading: true,
-                                    addMessage: true,
-                                    action: [{
-                                        text: 'Yes!',
-                                        value: true
-                                    }, {
-                                        text: 'No.',
-                                        value: false
-                                    }]
-                                }).then((resInner) => {
-                                    if(!resInner) {
-                                        codeEnded = true;
-                                        break load_messages;
-                                    }
-                                })
-                            */
-
-                            return botui.message.bot({
-                                loading: true,
-                                delay: 500,
-                                content: "Select the Additional building amenities you want",
-                            });
-                        })
-                        .then(() => {
-                            return botui.action.select({
-                                action: {
-                                    placeholder: "Amenities List",
-                                    multipleselect: true, // Default: false
-                                    options: [{
-                                            value: "ac",
-                                            text: "AC"
-                                        },
-                                        {
-                                            value: "wifi",
-                                            text: "WIFI"
-                                        },
-                                        {
-                                            value: "tv",
-                                            text: "T.V."
-                                        },
-                                        {
-                                            value: "microwave",
-                                            text: "Microwave"
-                                        }
-                                    ],
-                                    button: {
-                                        icon: 'check',
-                                        label: 'OK'
-                                    }
-                                }
-                            })
-                        })
-                        .then((res) => {
-                            var selected = res.value.split(",");
-                            for (let i = 0; i < selected.length; i++) {
-                                allData.amenities5[selected[i].trim()] = true
-                            }
-                            console.log(allData)
-                        });
-
-                } else {
-                    return botui.message.bot({
+                  $.post({
+                    url: "{% url 'handle_iteration' %}",
+                    async: false,
+                    data: {
+                      data: JSON.stringify(allData),
+                      iterNo: 1,
+                      csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                      currentPrice = response.currPrice
+                      botui.message.bot({
                         loading: true,
                         delay: 500,
-                        content: "Bye, Thank you for coming!",
-                    });
-                }
-            }).then(function () {
-                return botui.message.bot({
-                    loading: true,
-                    delay: 500,
-                    content: "Bye, Thank you for coming!",
-                });
-            })
+                        content: "Based on current data price is " +
+                          currentPrice,
+                      })
+                    },
+                    error: function(xhr, status, error) {
+                      console.log(error)
+                    }
+                  })
 
-            load_messages: if (codeEnded) {
-                botui.message.bot({
-                    loading: true,
-                    delay: 500,
-                    content: "Bye, Thank you for coming!",
-                });
+                  return botui.message.bot({
+                      loading: true,
+                      delay: 1000,
+                      content: "Want a more detailed estimate?",
+                    })
+                    .then(function() {
+
+                      return botui.action.button({
+                          delay: 500,
+                          loading: true,
+                          addMessage: true,
+                          action: [{
+                            text: 'Yes!',
+                            value: true
+                          }, {
+                            text: 'No.',
+                            value: false
+                          }]
+                        })
+                        .then((resInner) => {
+                          console.log(resInner)
+                          if (!resInner.value) {
+                            codeEnded = true;
+
+                            return botui.message.bot({
+                              loading: true,
+                              delay: 500,
+                              content: "Bye, Thank you for coming!",
+                            });
+                            // break load_messages;
+                          } else {
+                            return botui.message.bot({
+                                loading: true,
+                                delay: 500,
+                                content: "Select all the building amenities you want",
+                              })
+                              .then(() => {
+                                return botui.action.select({
+                                    action: {
+                                      placeholder: "Amenities List",
+                                      multipleselect: true, // Default: false
+                                      options: [{
+                                          value: "intercom",
+                                          text: "Intercom"
+                                        },
+                                        {
+                                          value: "security",
+                                          text: "Security"
+                                        },
+                                        {
+                                          value: "powerBackup",
+                                          text: "Power Backup"
+                                        },
+                                        {
+                                          value: "carParcking",
+                                          text: "Car Parking"
+                                        },
+                                        {
+                                          value: "lift",
+                                          text: "Lift"
+                                        }
+                                      ],
+                                      button: {
+                                        icon: 'check',
+                                        label: 'OK'
+                                      }
+                                    }
+                                  })
+                                  .then((res) => {
+                                    var selected = res.value.split(",");
+                                    for (let i = 0; i < selected.length; i++) {
+                                        allData.amenities1[selected[i].trim()] = true
+                                    }
+                                    // 1st ajax call here
+
+                                    $.post({
+                                      url: "{% url 'handle_iteration' %}",
+                                      async: false,
+                                      data: {
+                                        data: JSON.stringify(allData),
+                                        iterNo: 2,
+                                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                                      },
+                                      dataType: "json",
+                                      success: function(response) {
+                                        currentPrice = response.currPrice
+                                        botui.message.bot({
+                                          loading: true,
+                                          delay: 500,
+                                          content: "Based on current data price is " +
+                                            currentPrice,
+                                        })
+                                      },
+                                      error: function(xhr, status, error) {
+                                        console.log(error)
+                                      }
+                                    })
+
+                                    return botui.message.bot({
+                                        loading: true,
+                                        delay: 1000,
+                                        content: "Want a more detailed estimate?",
+                                      })
+                                      .then(function() {
+
+                                        return botui.action.button({
+                                            delay: 500,
+                                            loading: true,
+                                            addMessage: true,
+                                            action: [{
+                                              text: 'Yes!',
+                                              value: true
+                                            }, {
+                                              text: 'No.',
+                                              value: false
+                                            }]
+                                          })
+                                          .then((resInner) => {
+                                            if (!resInner.value) {
+                                              codeEnded = true;
+                                              return botui.message.bot({
+                                                loading: true,
+                                                delay: 500,
+                                                content: "Bye, Thank you for coming!",
+                                              });
+                                              // break load_messages;
+                                            } else {
+                                              return botui.message.bot({
+                                                loading: true,
+                                                delay: 500,
+                                                content: "Select all the building amenities you want",
+                                              })
+                                              .then(() => {
+                                                return botui.action.select({
+                                                    action: {
+                                                      placeholder: "Amenities List",
+                                                      multipleselect: true, // Default: false
+                                                      options: [{
+                                                          value: "maintainanceStaff",
+                                                          text: "Maintenance Staff"
+                                                        },
+                                                        {
+                                                          value: "gynasium",
+                                                          text: "Gymnasium"
+                                                        },
+                                                        {
+                                                          value: "swimmingPool",
+                                                          text: "Swimming Pool"
+                                                        },
+                                                        {
+                                                          value: "landscape",
+                                                          text: "Landscape"
+                                                        },
+                                                        {
+                                                          value: "rainwater",
+                                                          text: "Rain Water"
+                                                        },
+                                                        {
+                                                          value: "jogging",
+                                                          text: "Jogging"
+                                                        }
+                                                      ],
+                                                      button: {
+                                                        icon: 'check',
+                                                        label: 'OK'
+                                                      }
+                                                    }
+                                                  })
+                                                  .then((res) => {
+                                                    var selected = res.value.split(",");
+                                                    for (let i = 0; i < selected.length; i++) {
+                                                        allData.amenities2[selected[i].trim()] = true
+                                                    }
+                                                    // 2nd ajax call here
+
+                                                    $.post({
+                                                      url: "{% url 'handle_iteration' %}",
+                                                      async: false,
+                                                      data: {
+                                                        data: JSON.stringify(allData),
+                                                        iterNo: 3,
+                                                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                                                      },
+                                                      dataType: "json",
+                                                      success: function(response) {
+                                                        currentPrice = response.currPrice
+                                                        botui.message.bot({
+                                                          loading: true,
+                                                          delay: 500,
+                                                          content: "Based on current data price is " +
+                                                            currentPrice,
+                                                        })
+                                                      },
+                                                      error: function(xhr, status, error) {
+                                                        console.log(error)
+                                                      }
+                                                    })
+
+                                                    return botui.message.bot({
+                                                      loading: true,
+                                                      delay: 1000,
+                                                      content: "Want a more detailed estimate?",
+                                                    })
+                                                    .then(() => {
+                                                      return botui.action.button({
+                                                              delay: 500,
+                                                              loading: true,
+                                                              addMessage: true,
+                                                              action: [{
+                                                                text: 'Yes!',
+                                                                value: true
+                                                              }, {
+                                                                text: 'No.',
+                                                                value: false
+                                                              }]
+                                                            })
+                                                            .then((resInner) => {
+                                                              if (!resInner.value) {
+                                                                codeEnded = true;
+                                                                return botui.message.bot({
+                                                                  loading: true,
+                                                                  delay: 500,
+                                                                  content: "Bye, Thank you for coming!",
+                                                                });
+                                                                // break load_messages;
+                                                              } else {
+                                                                return botui.message.bot({
+                                                                  loading: true,
+                                                                  delay: 500,
+                                                                  content: "Select all the building amenities you want",
+                                                                })
+                                                                .then(() => {
+                                                                  return botui.action.select({
+                                                                      action: {
+                                                                        placeholder: "Amenities List",
+                                                                        multipleselect: true, // Default: false
+                                                                        options: [{
+                                                                            value: "sportsFacility",
+                                                                            text: "Sports Facility"
+                                                                          },
+                                                                          {
+                                                                            value: "clubHouse",
+                                                                            text: "Clubhouse"
+                                                                          },
+                                                                          {
+                                                                            value: "indoorGames",
+                                                                            text: "Indoor Games"
+                                                                          },
+                                                                          {
+                                                                            value: "childrenPlay",
+                                                                            text: "Children play"
+                                                                          }
+                                                                        ],
+                                                                        button: {
+                                                                          icon: 'check',
+                                                                          label: 'OK'
+                                                                        }
+                                                                      }
+                                                                  })
+                                                                  .then((res) => {
+                                                                    var selected = res.value.split(",");
+                                                                    for (let i = 0; i < selected.length; i++) {
+                                                                        allData.amenities3[selected[i].trim()] = true
+                                                                    }
+
+                                                                    // 3rd ajax call here
+
+                                                                    $.post({
+                                                                      url: "{% url 'handle_iteration' %}",
+                                                                      async: false,
+                                                                      data: {
+                                                                        data: JSON.stringify(allData),
+                                                                        iterNo: 4,
+                                                                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                                                                      },
+                                                                      dataType: "json",
+                                                                      success: function(response) {
+                                                                        currentPrice = response.currPrice
+                                                                        botui.message.bot({
+                                                                          loading: true,
+                                                                          delay: 500,
+                                                                          content: "Based on current data price is " +
+                                                                            currentPrice,
+                                                                        })
+                                                                      },
+                                                                      error: function(xhr, status, error) {
+                                                                        console.log(error)
+                                                                      }
+                                                                    })
+
+                                                                    return botui.message.bot({
+                                                                      loading: true,
+                                                                      delay: 1000,
+                                                                      content: "Want a more detailed estimate?",
+                                                                    })
+                                                                    .then(() => {
+                                                                      return botui.action.button({
+                                                                              delay: 500,
+                                                                              loading: true,
+                                                                              addMessage: true,
+                                                                              action: [{
+                                                                                text: 'Yes!',
+                                                                                value: true
+                                                                              }, {
+                                                                                text: 'No.',
+                                                                                value: false
+                                                                              }]
+                                                                            })
+                                                                            .then((resInner) => {
+                                                                              if (!resInner.value) {
+                                                                                codeEnded = true;
+                                                                                return botui.message.bot({
+                                                                                  loading: true,
+                                                                                  delay: 500,
+                                                                                  content: "Bye, Thank you for coming!",
+                                                                                });
+                                                                                // break load_messages;
+                                                                              } else {
+                                                                                return botui.message.bot({
+                                                                                  loading: true,
+                                                                                  delay: 500,
+                                                                                  content: "Select all the building amenities you want",
+                                                                                })
+                                                                                .then(() => {
+                                                                                  return botui.action.select({
+                                                                                      action: {
+                                                                                        placeholder: "Amenities List",
+                                                                                        multipleselect: true, // Default: false
+                                                                                        options: [{
+                                                                                            value: "bed",
+                                                                                            text: "Bed"
+                                                                                          },
+                                                                                          {
+                                                                                            value: "dinningTable",
+                                                                                            text: "Dining Table"
+                                                                                          },
+                                                                                          {
+                                                                                            value: "wardrobe",
+                                                                                            text: "Wardrobe"
+                                                                                          },
+                                                                                          {
+                                                                                            value: "refrigerator",
+                                                                                            text: "Referigator"
+                                                                                          }
+                                                                                        ],
+                                                                                        button: {
+                                                                                          icon: 'check',
+                                                                                          label: 'OK'
+                                                                                        }
+                                                                                      }
+                                                                                  })
+                                                                                  .then((res) => {
+                                                                                    var selected = res.value.split(",");
+                                                                                    for (let i = 0; i < selected.length; i++) {
+                                                                                        allData.amenities4[selected[i].trim()] = true
+                                                                                    }
+
+                                                                                    // 3rd ajax call here
+                                                                                    $.post({
+                                                                                      url: "{% url 'handle_iteration' %}",
+                                                                                      async: false,
+                                                                                      data: {
+                                                                                        data: JSON.stringify(allData),
+                                                                                        iterNo: 5,
+                                                                                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                                                                                      },
+                                                                                      dataType: "json",
+                                                                                      success: function(response) {
+                                                                                        currentPrice = response.currPrice
+                                                                                        botui.message.bot({
+                                                                                          loading: true,
+                                                                                          delay: 500,
+                                                                                          content: "Based on current data price is " +
+                                                                                            currentPrice,
+                                                                                        })
+                                                                                      },
+                                                                                      error: function(xhr, status, error) {
+                                                                                        console.log(error)
+                                                                                      }
+                                                                                    })
+
+                                                                                    return botui.message.bot({
+                                                                                      loading: true,
+                                                                                      delay: 1000,
+                                                                                      content: "Want a more detailed estimate?",
+                                                                                    })
+                                                                                    .then(() => {
+                                                                                      return botui.action.button({
+                                                                                              delay: 500,
+                                                                                              loading: true,
+                                                                                              addMessage: true,
+                                                                                              action: [{
+                                                                                                text: 'Yes!',
+                                                                                                value: true
+                                                                                              }, {
+                                                                                                text: 'No.',
+                                                                                                value: false
+                                                                                              }]
+                                                                                            })
+                                                                                            .then((resInner) => {
+                                                                                              if (!resInner.value) {
+                                                                                                codeEnded = true;
+                                                                                                return botui.message.bot({
+                                                                                                  loading: true,
+                                                                                                  delay: 500,
+                                                                                                  content: "Bye, Thank you for coming!",
+                                                                                                });
+                                                                                                // break load_messages;
+                                                                                              } else {
+                                                                                                return botui.message.bot({
+                                                                                                  loading: true,
+                                                                                                  delay: 500,
+                                                                                                  content: "Select all the building amenities you want",
+                                                                                                })
+                                                                                                .then(() => {
+                                                                                                    return botui.action.select({
+                                                                                                        action: {
+                                                                                                          placeholder: "Amenities List",
+                                                                                                          multipleselect: true, // Default: false
+                                                                                                          options: [{
+                                                                                                              value: "ac",
+                                                                                                              text: "AC"
+                                                                                                            },
+                                                                                                            {
+                                                                                                              value: "wifi",
+                                                                                                              text: "WIFI"
+                                                                                                            },
+                                                                                                            {
+                                                                                                              value: "tv",
+                                                                                                              text: "T.V."
+                                                                                                            },
+                                                                                                            {
+                                                                                                              value: "microwave",
+                                                                                                              text: "Microwave"
+                                                                                                            }
+                                                                                                          ],
+                                                                                                          button: {
+                                                                                                            icon: 'check',
+                                                                                                            label: 'OK'
+                                                                                                          }
+                                                                                                        }
+                                                                                                    })
+                                                                                                    .then((res) => {
+                                                                                                      var selected = res.value.split(",");
+                                                                                                      for (let i = 0; i < selected.length; i++) {
+                                                                                                          allData.amenities5[selected[i].trim()] = true
+                                                                                                      }
+
+                                                                                                      // 4th ajax call here
+                                                                                                      $.post({
+                                                                                                        url: "{% url 'handle_iteration' %}",
+                                                                                                        async: false,
+                                                                                                        data: {
+                                                                                                          data: JSON.stringify(allData),
+                                                                                                          iterNo: 6,
+                                                                                                          csrfmiddlewaretoken: '{{ csrf_token }}'
+                                                                                                        },
+                                                                                                        dataType: "json",
+                                                                                                        success: function(response) {
+                                                                                                          currentPrice = response.currPrice
+                                                                                                          botui.message.bot({
+                                                                                                            loading: true,
+                                                                                                            delay: 500,
+                                                                                                            content: "Final price is " +
+                                                                                                              currentPrice,
+                                                                                                          })
+                                                                                                        },
+                                                                                                        error: function(xhr, status, error) {
+                                                                                                          console.log(error)
+                                                                                                        }
+                                                                                                      })
+                                                                                                      return botui.message.bot({
+                                                                                                        loading: true,
+                                                                                                        delay: 1000,
+                                                                                                        content: "Bye, Thank you for coming!",
+                                                                                                      });
+                                                                                                    })
+                                                                                                })
+                                                                                              }
+                                                                                        })
+                                                                                      })
+
+                                                                                  })
+                                                                                })
+
+
+                                                                              }
+                                                                            })
+                                                                      })
+
+
+                                                                  })
+                                                                })
+                                                              }
+                                                            })
+
+                                                    })
+                                                  })
+                                            })
+
+
+                                            }
+                                          })
+                                      })
+                                  })
+                              })
+                          }
+                        })
+                    })
+                })
+            } else {
+              return botui.message.bot({
+                loading: true,
+                delay: 1000,
+                content: "Bye, Thank you for coming!",
+              });
             }
-
-        })
+          })
+        });
     </script>
 </body>
 
