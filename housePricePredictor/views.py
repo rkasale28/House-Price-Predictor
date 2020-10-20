@@ -60,6 +60,7 @@ def handle_iteration(request):
         print('iteration : ',iteration)
         # if(iteration == 1):
         city = request_data.get("city")
+        location = request_data.get("location")
         area = request_data.get("area")
         bedroomCount = request_data.get("bedroomCount")
         resale = request_data.get("resale")
@@ -87,9 +88,9 @@ def handle_iteration(request):
         tv = request_data.get("amenities5").get("tv")
         microwave = request_data.get("amenities5").get("microwave")
 
-        predicted_price = caller(iteration,city,area,bedroomCount,resale,intercom, security, powerBackup, carParking, lift, maintenanceStaff, gymnasium, swimmingPool, landscape, jogging, rainwater, sportsFacility, clubHouse, indoorGames, childrenPlay, bed, diningTable, wardrobe, referigator, ac, wifi, tv, microwave)
+        predicted_price = caller(iteration,city,area,bedroomCount,resale, location,intercom, security, powerBackup, carParking, lift, maintenanceStaff, gymnasium, swimmingPool, landscape, jogging, rainwater, sportsFacility, clubHouse, indoorGames, childrenPlay, bed, diningTable, wardrobe, referigator, ac, wifi, tv, microwave)
 
         response = {
-            "currPrice" : predicted_price,
+            "currPrice" : f'₹ {int(predicted_price)}',
         }
         return JsonResponse(response)

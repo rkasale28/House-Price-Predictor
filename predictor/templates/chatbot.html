@@ -126,7 +126,7 @@
             return botui.message.bot({
               loading: true,
               delay: 500,
-              content: "I'm Xavi, your online real estate assitant.",
+              content: "I'm House Genie, your online real estate assistant.",
             });
           }).then(function() {
             return botui.message.bot({
@@ -180,7 +180,7 @@
                     delay: 400,
                     action: {
                       size: 18,
-                      icon: 'user-circle-o',
+                      icon: 'info',
                       sub_type: 'number',
                       placeholder: 'Area'
                     }
@@ -199,7 +199,7 @@
                     delay: 400,
                     action: {
                       size: 18,
-                      icon: 'user-circle-o',
+                      icon: 'info',
                       sub_type: 'text',
                       placeholder: 'Location'
                     }
@@ -218,7 +218,7 @@
                     delay: 400,
                     action: {
                       size: 18,
-                      icon: 'user-circle-o',
+                      icon: 'info',
                       sub_type: 'number',
                       placeholder: 'Bedroom Count'
                     }
@@ -307,7 +307,7 @@
                             return botui.message.bot({
                                 loading: true,
                                 delay: 500,
-                                content: "Select all the building amenities you want",
+                                content: "Select all the basic amenities you want",
                               })
                               .then(() => {
                                 return botui.action.select({
@@ -403,7 +403,7 @@
                                               return botui.message.bot({
                                                 loading: true,
                                                 delay: 500,
-                                                content: "Select all the building amenities you want",
+                                                content: "Select all the community amenities you want",
                                               })
                                               .then(() => {
                                                 return botui.action.select({
@@ -502,7 +502,7 @@
                                                                 return botui.message.bot({
                                                                   loading: true,
                                                                   delay: 500,
-                                                                  content: "Select all the building amenities you want",
+                                                                  content: "Select all the recreational amenities you want",
                                                                 })
                                                                 .then(() => {
                                                                   return botui.action.select({
@@ -594,7 +594,7 @@
                                                                                 return botui.message.bot({
                                                                                   loading: true,
                                                                                   delay: 500,
-                                                                                  content: "Select all the building amenities you want",
+                                                                                  content: "Select all the furniture/appliances you want",
                                                                                 })
                                                                                 .then(() => {
                                                                                   return botui.action.select({
@@ -685,7 +685,7 @@
                                                                                                 return botui.message.bot({
                                                                                                   loading: true,
                                                                                                   delay: 500,
-                                                                                                  content: "Select all the building amenities you want",
+                                                                                                  content: "Select all the house amenities you want",
                                                                                                 })
                                                                                                 .then(() => {
                                                                                                     return botui.action.select({
