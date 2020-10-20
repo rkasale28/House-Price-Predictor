@@ -25,7 +25,7 @@ def read_data(i, city):
     df = clean(df)
     df1 = pd.DataFrame()
     df1["Price"] = pd.Series(df["Price"])
-    
+        
     while j <= i:
         if j is 0:
             df1["Area"] = pd.Series(df["Area"])
@@ -53,19 +53,13 @@ def read_data(i, city):
             df.drop(['WashingMachine', 'BED', 'DiningTable', 'Sofa', 'Wardrobe', 'Refrigerator'], axis=1, inplace=True)
         j += 1
     
-    df.drop(['MultipurposeRoom', 'VaastuCompliant'], axis=1, inplace=True)
+    # df.drop(['MultipurposeRoom', 'VaastuCompliant'], axis=1, inplace=True)
+    # remove_outliers(df1)
+    print(df1.head())
     remove_outliers(df1)
-
-
-# In[17]:
-
 
 def clean(df):
     return df.replace(9,np.NaN).dropna()
-
-
-# In[18]:
-
 
 def remove_outliers(df):
     df = df.sort_values(['Price'])
@@ -84,11 +78,8 @@ def remove_outliers(df):
     df = df[(df['Price']>upper_limit) & (df['Price']<lower_limit)]
     normalize(df)
 
-
-# In[19]:
-
-
-def normalize(df):  
+# min max normalization
+def normalize(df):
     result = df.copy()
     global maxx
     global minn
@@ -106,10 +97,6 @@ def normalize(df):
     #print(maxx, minn)
     #print(df.head())
     splitt(df)
-
-
-# In[20]:
-
 
 def splitt(df):
     y = np.array(df['Price']).reshape(-1, 1)
@@ -303,7 +290,4 @@ def output():
 
 
 # In[ ]:
-
-
-
 
