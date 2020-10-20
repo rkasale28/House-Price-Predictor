@@ -22,29 +22,29 @@ data = {}
 # Create your views here.
 def index(request):
     cites = [
-        { 
-            "value" : "Mumbai", 
-            "text" : "Mumbai" 
+        {
+            "value" : "Mumbai",
+            "text" : "Mumbai"
         },
-        { 
-            "value" : "Delhi", 
-            "text" : "Delhi", 
+        {
+            "value" : "Delhi",
+            "text" : "Delhi",
         },
-        { 
-            "value" : "Chennai", 
-            "text" : "Chennai", 
+        {
+            "value" : "Chennai",
+            "text" : "Chennai",
         },
-        { 
-            "value" : "Hyderabad", 
-            "text" : "Hyderabad", 
+        {
+            "value" : "Hyderabad",
+            "text" : "Hyderabad",
         },
-        { 
-            "value" : "Kolkata", 
-            "text" : "Kolkata", 
+        {
+            "value" : "Kolkata",
+            "text" : "Kolkata",
         },
-        { 
-            "value" : "Bangalore", 
-            "text" : "Bangalore", 
+        {
+            "value" : "Bangalore",
+            "text" : "Bangalore",
         },
 
 
@@ -93,39 +93,3 @@ def handle_iteration(request):
             "currPrice" : predicted_price,
         }
         return JsonResponse(response)
-
-
-# def intermediate(request):
-#     data['amenities'] = amenities
-#     print (len(amenities))
-#     if request.method=='POST':
-#         city = request.POST['cities']
-
-#         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-#         df = pd.read_csv(os.path.join(BASE_DIR, 'predictor/data',city+'.csv'))
-#         data['locations'] = df['Location'].unique()
-#         data['city'] = city
-
-#         return render(request,'intermediate.html',data)
-
-#     return HttpResponse('404 : Not Found')
-
-# def result(request):
-#     if request.method=='POST':
-#         data['amenities'] = amenities
-#         data['city'] = request.POST['city']
-#         data['area'] = request.POST['area']
-#         data['bedrooms'] = request.POST['bedrooms']
-#         data['location'] = request.POST['locations']
-
-#         dict = {}
-#         for i in amenities:
-#             if request.POST.__contains__(i.lower()):
-#                 dict[i] = 'Yes'
-#             else:
-#                 dict[i] = 'No'    
-#         data['dict'] = dict
-
-#         return render(request,'result.html',data)
-
-#     return HttpResponse('404 : Not Found')
