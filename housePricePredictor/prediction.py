@@ -35,13 +35,29 @@ def read_data(i, city):
         j += 1
 
     print(df1.head())
-    normalize(df1)
-
+    remove_outliers(df1)
 
 def clean(df):
     return df.replace(9,np.NaN).dropna()
 
-# min max normalization 
+def remove_outliers(df):
+    df = df.sort_values(['Price'])
+    len  = int(df.shape[0]/2)
+    df1 = df[:len]
+    df2 = df[len:]
+
+    q1 = df1.median()['Price']
+    q2 = df.median()['Price']
+    q3 = df2.median()['Price']
+    iqr = q3 - q1
+
+    upper_limit = q1- 1.5*iqr
+    lower_limit = q3 + 1.5*iqr
+
+    df = df[(df['Price']>upper_limit) & (df['Price']<lower_limit)]
+    normalize(df)
+
+# min max normalization
 def normalize(df):
     result = df.copy()
     global maxx
@@ -59,12 +75,8 @@ def normalize(df):
     df = result.copy()
     splitt(df)
 
-<<<<<<< HEAD
-
 # In[82]:
 
-=======
->>>>>>> 2cbd669b97756b3251c2a736907672bf940e75d8
 def splitt(df):
     y = np.array(df['Price']).reshape(-1, 1)
     df.drop('Price', axis = 1, inplace = True)
@@ -188,10 +200,7 @@ def caller(i, city, Area, Bedroom, Resale, Intercom = None, Security = None, Pow
     global minn, maxx
     pri = (pri * (maxx - minn)) + minn
     print(pri/12)
-    return int(pri/12) 
-
-
-# In[1]:
+    return int(pri/12)
 
 
 # caller(1, "Mumbai", 700, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -199,6 +208,3 @@ def caller(i, city, Area, Bedroom, Resale, Intercom = None, Security = None, Pow
 # MaintenanceStaff = None, Gymnasium = None, SwimmingPool = None, Landscape = None, Jogging = None, RainWater = None,
 # SportsFacility = None, Clubhouse = None, IndoorGames = None, Childrenplay = None, BED = None, Diningtable = None,
 # Wardrobe = None, Referigator = None, AC = None, Wifi = None, TV = None, Microwave = None
-# In[ ]:
-
-
