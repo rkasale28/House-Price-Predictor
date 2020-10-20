@@ -80,6 +80,7 @@ def read_data(i, city):
 def clean(df):
     return df.replace(9,np.NaN).dropna()
 
+# min max normalization 
 def normalize(df):
     result = df.copy()
     global maxx
@@ -101,7 +102,6 @@ def normalize(df):
 
 
 # In[82]:
-
 
 def splitt(df):
     y = np.array(df['Price']).reshape(-1, 1)
@@ -264,8 +264,8 @@ def caller(i, city, Area, Bedroom, Resale, Intercom = None, Security = None, Pow
     #pri = a[0, 0] + a[0, 1]*720 + a[0, 2]*1 + a[0, 3]*1 + a[0, 4]*0 + a[0, 5]*0 + a[0, 6]*0 + a[0, 7]*0 + a[0, 8]*0 + a[0, 9]*1 + a[0, 10]*1 + a[0, 11]*0 + a[0, 12]*1 + a[0, 13]*0 + a[0, 14]*2 + a[0, 15]*0
     global minn, maxx
     pri = (pri * (maxx - minn)) + minn
-    print(pri/15)
-    return pri
+    print(pri/10)
+    return int(pri/12) 
 
 
 # In[1]:
